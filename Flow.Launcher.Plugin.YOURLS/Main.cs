@@ -8,24 +8,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using Flow.Launcher.Plugin;
-using Flow.Launcher.Plugin.YOURLS.ViewModels;
-using Flow.Launcher.Plugin.YOURLS_Shortener;
 using Flurl;
 using Flurl.Http;
 
 namespace Flow.Launcher.Plugin.YOURLS
 {
-    public class YOURLS : IPlugin, ISettingProvider
+    public class Main : IPlugin, ISettingProvider
     {
-        private PluginInitContext Context { get; set; }
+        private PluginInitContext _context { get; set; }
 
         private static Settings _settings;
-        private static SettingsViewModel _viewModel;
         public void Init(PluginInitContext context)
         {
-            Context = context;
-            _settings = context.API.LoadSettingJsonStorage<Settings>();
-            _viewModel = new SettingsViewModel(_settings);
+            _context = context;
+            _settings = _context.API.LoadSettingJsonStorage<Settings>();
         }
 
         public List<Result> Query(Query query)
@@ -66,8 +62,8 @@ namespace Flow.Launcher.Plugin.YOURLS
                 {
                     var shortUrl = await ShortenUrl(url, customName);
                     if (shortUrl == null) return false;
-                    Context.API.CopyToClipboard(shortUrl, showDefaultNotification: false);
-                    Context.API.ShowMsg("URL copied to clipboard.");
+                    _context.API.CopyToClipboard(shortUrl, showDefaultNotification: false);
+                    _context.API.ShowMsg("URL copied to clipboard.");
                     return true;
                 }
             });
@@ -88,7 +84,7 @@ namespace Flow.Launcher.Plugin.YOURLS
 
             if(response.status == "fail")
             {
-                Context.API.ShowMsg(response.message);
+                _context.API.ShowMsg(response.message);
                 return null;
             }
 
@@ -150,7 +146,7 @@ namespace Flow.Launcher.Plugin.YOURLS
 
         public Control CreateSettingPanel()
         {
-            return new SettingsView(_viewModel);
+            return new SettingsControl(_settings);
         }
     }
 }
