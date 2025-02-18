@@ -1,3 +1,5 @@
+## ⚠️Not yet functional
+
 YOURLs Integration for Flow
 ==================
 
