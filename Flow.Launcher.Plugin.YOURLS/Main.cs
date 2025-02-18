@@ -78,9 +78,9 @@ namespace Flow.Launcher.Plugin.YOURLS
                 url,
                 keyword = customName,
                 format = "json",
-                signature = HashMD5(timestamp.ToString() + _settings.SignatureToken),
+                signature = HashMD5(timestamp.ToString() + _settings.SignatureToken).ToLower(),
                 timestamp
-            }).PostAsync().ReceiveJson<IYOURLSResponse>();
+            }).PostAsync().ReceiveJson<YOURLSResponse>();
 
             if(response.status == "fail")
             {
