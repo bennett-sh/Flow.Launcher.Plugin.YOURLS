@@ -4,7 +4,7 @@ namespace Flow.Launcher.Plugin.YOURLS
 {
     public partial class SettingsControl : UserControl
     {
-        private readonly Settings Settings;
+        private Settings Settings { get; }
 
         public SettingsControl(Settings settings)
         {
