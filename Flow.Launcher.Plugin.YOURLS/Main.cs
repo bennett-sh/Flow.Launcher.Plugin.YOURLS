@@ -44,9 +44,7 @@ namespace Flow.Launcher.Plugin.YOURLS
             else if (query.FirstSearch.Length > 0 && IsValidUrl(query.FirstSearch))
             {
                 url = query.FirstSearch;
-                Context.API.LogWarn("YOURLS", "URL: " + url);
-                Context.API.LogWarn("YOURLS", "Second query: " + JsonSerializer.Serialize(query.SearchTerms));
-                if (query.SecondSearch.Length > 0) customName = query.SecondToEndSearch;
+                if (query.SecondSearch.Length > 0) customName = query.SecondSearch;
             }
             else
             {

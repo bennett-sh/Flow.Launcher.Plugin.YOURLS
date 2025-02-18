@@ -13,11 +13,9 @@ namespace Flow.Launcher.Plugin.YOURLS
     public partial class SettingsView : UserControl
     {
         private readonly SettingsViewModel _viewModel;
-        private readonly Settings _settings;
 
         public SettingsView(SettingsViewModel viewModel)
         {
-            _settings = _viewModel.Settings;
             _viewModel = viewModel;
             DataContext = viewModel;
             InitializeComponent();
