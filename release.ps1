@@ -1,0 +1,2 @@
+dotnet publish Flow.Launcher.Plugin.YOURLS_Shortener -c Release -r win-x64 --no-self-contained
+Compress-Archive -LiteralPath Flow.Launcher.Plugin.YOURLS_Shortener/bin/Release/win-x64/publish -DestinationPath Flow.Launcher.Plugin.YOURLS_Shortener/bin/YOURLS_Shortener.zip -Force
