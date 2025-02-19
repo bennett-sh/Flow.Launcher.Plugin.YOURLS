@@ -1,15 +1,18 @@
-name: .NET
+name: Artifacts
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 jobs:
   build:
-
     runs-on: windows-latest
+
+    strategy:
+      matrix:
+        configuration: [debug, release]
 
     steps:
     - uses: actions/checkout@v4
@@ -23,13 +26,11 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore --configuration Debug
-
-    - name: Zip Output
-      run: Compress-Archive -Path .\Flow.Launcher.Plugin.YOURLS\bin\Debug\* -DestinationPath flow.launcher.yourls-artifact.zip
+      run: dotnet build --no-restore --configuration ${{ matrix.configuration }}
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: debug
-        path: flow.launcher.yourls-artifact.zip
+        name: ${{ matrix.configuration }}
+        path: .\Flow.Launcher.Plugin.YOURLS\bin\${{ matrix.configuration }}\*
+        compression-level: 9
