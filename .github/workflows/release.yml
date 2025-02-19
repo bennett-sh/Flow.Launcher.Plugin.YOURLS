@@ -1,0 +1,115 @@
+name: Release
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        configuration: [release]  # note: adding debug will not work as the tags will be duplicated
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Read version from plugin.json
+      id: read_versin
+      run: |
+        $json = Get-Content plugin.json | ConvertFrom-Json
+        echo "VERSION=$($json.Version)" >> $env:GITHUB_ENV
+      shell: pwsh
+
+    - name: Check if tag exists
+      run: |
+        $tags = git tag
+        if ($tags -match "v$env:VERSION") {
+          echo "Version v$env:VERSION already exists!"
+          exit 0
+        }
+      shell: pwsh
+
+    - name: Create tag
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git tag v$env:VERSION
+        git push origin v$env:VERSION
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration ${{ matrix.configuration }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.configuration }}
+        path: .\Flow.Launcher.Plugin.YOURLS\bin\${{ matrix.configuration }}\*
+        compression-level: 9
+
+    - name: Zip output for release
+      run: Compress-Archive -Path .\Flow.Launcher.Plugin.YOURLS\bin\${{ matrix.configuration }}\* -DestinationPath flow-yourls-v${{ env.VERSION }}-release.zip
+
+    - name: Generate changelog
+      id: changelog
+      run: |
+        $repo = "${{ github.repository }}"
+        $commits = git log --pretty=format:"%s|%H|%an" ${{ github.event.before }}..${{ github.sha }}
+
+        $feat = @()
+        $fix = @()
+        $bump = @()
+        $other = @()
+
+        foreach($commit in $commits -split "\n") {
+          $parts = $commit -split "\|"
+          $msg = $parts[0]
+          $hash = $parts[1]
+          $author = $parts[2]
+
+          $commitUrl = "https://github.com/$repo/commit/$hash"
+          $authorUrl = "https://github.com/$author
+
+          $entry = "* $msg ([#$hash]($commitUrl), by [$author]($authorUrl))"
+
+          if($msg -match "^feat") {
+            $feat += entry
+          } elseif ($msg -match "^fix") {
+            $fix += entry
+          } elseif ($msg -match "^bump") {
+            $bump += entry
+          } else {
+            $other += $entry
+          }
+        }
+
+         $changelog = "# 🔗 Release v$env:VERSION`n`n"
+         if ($feat.Count -gt 0) { $changelog += "## 🎉Features:`n" + ($feat -join "`n") + "`n`n" }
+         if ($fix.Count -gt 0) { $changelog += "## 🪲Fixes:`n" + ($fix -join "`n") + "`n`n" }
+         if ($other.Count -gt 0) { $changelog += "## 💠Other:`n" + ($other -join "`n") + "`n`n" }
+
+         echo "::set-output name=changelog::$changelog"
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ env.VERSION }}
+        name: ${{ env.VERSION }}
+        body: ${{ steps.changelog.outputs.changelog }}
+        files: flow-yourls-v${{ env.VERSION }}-release.zip
+        draft: false
+        prerelease: false
+        
