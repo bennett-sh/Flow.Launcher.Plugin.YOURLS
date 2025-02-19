@@ -103,7 +103,7 @@ jobs:
          if ($fix.Count -gt 0) { $changelog += "## 🪲Fixes:`n" + ($fix -join "`n") + "`n`n" }
          if ($other.Count -gt 0) { $changelog += "## 💠Other:`n" + ($other -join "`n") + "`n`n" }
 
-         echo "::set-output name=changelog::$changelog"
+         echo "changelog=$changelog" >> $GITHUB_OUTPUT
 
     - name: Create Release
       uses: softprops/action-gh-release@v2
