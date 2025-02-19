@@ -26,7 +26,7 @@ jobs:
       run: dotnet build --no-restore --configuration Debug
 
     - name: Zip Output
-      run: Compress-Archive -Path .\bin\Debug\* -DestinationPath flow.launcher.yourls-artifact.zip
+      run: Compress-Archive -Path .\Flow.Launcher.Plugin.YOURLS\bin\Debug\* -DestinationPath flow.launcher.yourls-artifact.zip
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
