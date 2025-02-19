@@ -86,7 +86,7 @@ jobs:
           $commitUrl = "https://github.com/$repo/commit/$hash"
           $authorUrl = "https://github.com/$author
 
-          $entry = "* $msg ([#$hash]($commitUrl), by [$author]($authorUrl))"
+          $entry = "* $msg ([`#$hash]($commitUrl), by [$author]($authorUrl))"
 
           if($msg -match "^feat") {
             $feat += entry
