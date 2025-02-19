@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: windows-latest
 
+    permissions:
+      contents: write
+
     strategy:
       matrix:
         configuration: [release]  # note: adding debug will not work as the tags will be duplicated
