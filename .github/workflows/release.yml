@@ -110,7 +110,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ env.VERSION }}
-        name: ${{ env.VERSION }}
+        name: v${{ env.VERSION }}
         body: ${{ steps.changelog.outputs.changelog }}
         files: flow-yourls-v${{ env.VERSION }}-release.zip
         draft: false
