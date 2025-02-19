@@ -84,7 +84,7 @@ jobs:
           $author = $parts[2]
 
           $commitUrl = "https://github.com/$repo/commit/$hash"
-          $authorUrl = "https://github.com/$author
+          $authorUrl = "https://github.com/$author"
 
           $entry = "* $msg ([`#$hash]($commitUrl), by [$author]($authorUrl))"
 
