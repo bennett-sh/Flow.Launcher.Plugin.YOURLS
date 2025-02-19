@@ -22,7 +22,7 @@ jobs:
     - name: Read version from plugin.json
       id: read_versin
       run: |
-        $json = Get-Content plugin.json | ConvertFrom-Json
+        $json = Get-Content .\Flow.Launcher.Plugin.YOURLS\plugin.json | ConvertFrom-Json
         echo "VERSION=$($json.Version)" >> $env:GITHUB_ENV
       shell: pwsh
 
