@@ -63,7 +63,7 @@ jobs:
         compression-level: 9
 
     - name: Zip output for release
-      run: Compress-Archive -Path .\Flow.Launcher.Plugin.YOURLS\bin\${{ matrix.configuration }}\* -DestinationPath flow-yourls-v${{ env.VERSION }}-release.zip
+      run: Compress-Archive -Path .\Flow.Launcher.Plugin.YOURLS\bin\${{ matrix.configuration }}\* -DestinationPath flow-yourls-release.zip
 
     - name: Generate changelog
       id: changelog
@@ -111,7 +111,7 @@ jobs:
         tag_name: v${{ env.VERSION }}
         name: v${{ env.VERSION }}
         body: ${{ steps.changelog.outputs.changelog }}
-        files: flow-yourls-v${{ env.VERSION }}-release.zip
+        files: flow-yourls-release.zip
         draft: false
         prerelease: false
         
