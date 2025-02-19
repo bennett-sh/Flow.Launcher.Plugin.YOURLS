@@ -16,8 +16,8 @@ namespace Flow.Launcher.Plugin.YOURLS
     public class Main : IPlugin, ISettingProvider
     {
         private PluginInitContext _context { get; set; }
-
         private static Settings _settings;
+
         public void Init(PluginInitContext context)
         {
             _context = context;
@@ -49,7 +49,8 @@ namespace Flow.Launcher.Plugin.YOURLS
                     {
                         Title = "Please provide a valid Url.",
                         SubTitle = "Syntax: [url] [<custom-name>]",
-                        SubTitleToolTip = "Note: do not use spaces in any argument."
+                        SubTitleToolTip = "Note: do not use spaces in any argument.",
+                        IcoPath = "icon.png"
                     }
                 );
             }
@@ -58,6 +59,7 @@ namespace Flow.Launcher.Plugin.YOURLS
             {
                 Title = $"Shorten URL{(customName.Length > 0 ? $" ({customName})" : "")}",
                 SubTitle = url,
+                IcoPath = "icon.png",
                 AsyncAction = async _ =>
                 {
                     var shortUrl = await ShortenUrl(url, customName);
