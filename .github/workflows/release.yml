@@ -88,11 +88,11 @@ jobs:
           $entry = "* $msg ([`#$hash]($commitUrl), by [$author]($authorUrl))"
 
           if($msg -match "^feat") {
-            $feat += entry
+            $feat += $entry
           } elseif ($msg -match "^fix") {
-            $fix += entry
+            $fix += $entry
           } elseif ($msg -match "^bump") {
-            $bump += entry
+            $bump += $entry
           } else {
             $other += $entry
           }
